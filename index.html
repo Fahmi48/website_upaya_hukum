@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KasasiTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ═══════════════ AUTH SCREEN ═══════════════ -->
+<div id="auth-screen" class="auth-screen">
+  <div class="auth-bg">
+    <div class="auth-orb auth-orb-1"></div>
+    <div class="auth-orb auth-orb-2"></div>
+    <div class="auth-grid"></div>
+  </div>
+  <div class="auth-card">
+    <div class="auth-brand">
+      <div class="brand-mark">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <path d="M14 2L26 8V20L14 26L2 20V8L14 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+          <path d="M14 7L21 11V17L14 21L7 17V11L14 7Z" fill="currentColor" opacity="0.3"/>
+          <circle cx="14" cy="14" r="2.5" fill="currentColor"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">KasasiTrack</div>
+        <div class="brand-tagline">Sistem Pelacakan Upaya Hukum Kasasi</div>
+      </div>
+    </div>
+
+    <div id="login-panel" class="auth-panel">
+      <div class="panel-heading">Selamat Datang</div>
+      <div class="panel-sub">Masuk untuk mengelola perkara kasasi Anda</div>
+      <div class="field-group">
+        <div class="form-field">
+          <label>Email</label>
+          <input type="email" id="l-email" placeholder="nama@firma-hukum.com" autocomplete="email"/>
+        </div>
+        <div class="form-field">
+          <label>Kata Sandi</label>
+          <input type="password" id="l-pass" placeholder="••••••••" autocomplete="current-password"/>
+          <button class="pass-toggle" onclick="togglePass('l-pass',this)" tabindex="-1">
+            <svg id="eye-l" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="form-error" id="l-err"></div>
+      <button class="btn-auth" id="l-btn" onclick="doLogin()">
+        <span>Masuk</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <div class="auth-sep"><span>atau</span></div>
+      <button class="btn-google" onclick="doGoogle()">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Masuk dengan Google
+      </button>
+      <div class="switch-link">Belum punya akun? <a href="#" onclick="showPanel('reg')">Daftar sekarang</a></div>
+    </div>
+
+    <div id="reg-panel" class="auth-panel" style="display:none">
+      <div class="panel-heading">Buat Akun Baru</div>
+      <div class="panel-sub">Daftarkan akun untuk mulai melacak perkara</div>
+      <div class="field-group">
+        <div class="form-field">
+          <label>Nama / Firma Hukum</label>
+          <input type="text" id="r-name" placeholder="Nama Pengacara / Kantor Hukum"/>
+        </div>
+        <div class="form-field">
+          <label>Email</label>
+          <input type="email" id="r-email" placeholder="nama@firma-hukum.com"/>
+        </div>
+        <div class="form-field">
+          <label>Kata Sandi</label>
+          <input type="password" id="r-pass" placeholder="Minimal 6 karakter"/>
+          <button class="pass-toggle" onclick="togglePass('r-pass',this)" tabindex="-1">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="form-error" id="r-err"></div>
+      <button class="btn-auth" id="r-btn" onclick="doRegister()">
+        <span>Buat Akun</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <div class="switch-link">Sudah punya akun? <a href="#" onclick="showPanel('login')">Masuk</a></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ APP ═══════════════ -->
+<div id="app" style="display:none">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-brand">
+        <div class="brand-mark small">
+          <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
+            <path d="M14 2L26 8V20L14 26L2 20V8L14 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <path d="M14 7L21 11V17L14 21L7 17V11L14 7Z" fill="currentColor" opacity="0.4"/>
+            <circle cx="14" cy="14" r="2.5" fill="currentColor"/>
+          </svg>
+        </div>
+        <span class="topbar-name">KasasiTrack</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="user-info">
+        <div class="user-avatar" id="u-avatar">?</div>
+        <span class="user-label" id="u-label">—</span>
+      </div>
+      <button class="topbar-btn" onclick="doLogout()" title="Keluar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- CASE RIBBON -->
+  <div class="case-ribbon">
+    <div class="ribbon-inner">
+      <div class="ribbon-label">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        Perkara
+      </div>
+      <div class="ribbon-tabs" id="ribbon-tabs"></div>
+      <button class="ribbon-add" onclick="openAddCase()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Tambah Perkara
+      </button>
+    </div>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div id="empty-state" class="empty-state" style="display:none">
+    <div class="empty-icon">
+      <svg width="48" height="48" viewBox="0 0 28 28" fill="none">
+        <path d="M14 2L26 8V20L14 26L2 20V8L14 2Z" stroke="currentColor" stroke-width="1"/>
+        <path d="M14 7L21 11V17L14 21L7 17V11L14 7Z" fill="currentColor" opacity="0.15"/>
+        <circle cx="14" cy="14" r="2" fill="currentColor" opacity="0.4"/>
+      </svg>
+    </div>
+    <div class="empty-title">Belum Ada Perkara</div>
+    <div class="empty-desc">Tambahkan perkara kasasi pertama Anda untuk mulai melacak proses hukum.</div>
+    <button class="btn-cta" onclick="openAddCase()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Tambah Perkara Pertama
+    </button>
+  </div>
+
+  <!-- LOADING -->
+  <div id="load-state" class="load-state">
+    <div class="load-ring"></div>
+    <span>Memuat data perkara…</span>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div id="main" style="display:none">
+
+    <!-- TIMELINE HEADER -->
+    <div class="timeline-header">
+      <div class="timeline-scroll" id="timeline-scroll"></div>
+    </div>
+
+    <!-- WORKSPACE -->
+    <div class="workspace">
+
+      <!-- LEFT: STEPS -->
+      <div class="steps-pane">
+        <div class="steps-pane-header">
+          <div>
+            <div class="case-num-title" id="c-num">—</div>
+            <div class="case-parties-sub" id="c-parties">—</div>
+          </div>
+          <div class="pane-actions">
+            <button class="icon-btn warn" onclick="confirmDelete()" title="Hapus perkara">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="steps-list" id="steps-list"></div>
+      </div>
+
+      <!-- RIGHT: PANEL -->
+      <div class="info-pane">
+
+        <div class="info-section">
+          <div class="info-section-title">Progres Perkara</div>
+          <div class="progress-ring-wrap">
+            <svg class="progress-ring" width="88" height="88" viewBox="0 0 88 88">
+              <circle cx="44" cy="44" r="36" fill="none" stroke="var(--ring-track)" stroke-width="6"/>
+              <circle cx="44" cy="44" r="36" fill="none" stroke="var(--accent)" stroke-width="6"
+                stroke-linecap="round" stroke-dasharray="226" stroke-dashoffset="226"
+                id="ring-circle" style="transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dashoffset .6s ease"/>
+            </svg>
+            <div class="ring-label">
+              <div class="ring-pct" id="ring-pct">0%</div>
+              <div class="ring-sub" id="ring-done">0/8</div>
+            </div>
+          </div>
+          <div class="progress-legend" id="progress-legend"></div>
+        </div>
+
+        <div class="info-section">
+          <div class="info-section-title">Tenggat Waktu</div>
+          <div id="deadlines-wrap"></div>
+        </div>
+
+        <div class="info-section">
+          <div class="info-section-title">Log Aktivitas</div>
+          <div id="activity-wrap"></div>
+        </div>
+
+        <div class="law-note">
+          <div class="law-note-icon">§</div>
+          <div class="law-note-text">Batas waktu pengajuan <strong>memori kasasi</strong> adalah <strong>14 hari</strong> sejak tanggal pernyataan kasasi diajukan (Pasal 248 KUHAP / Pasal 46 UU MA).</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: TAMBAH PERKARA -->
+<div class="modal-veil" id="m-case" onclick="closeModal('m-case',event)">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-title">Daftarkan Perkara Kasasi</div>
+      <button class="icon-btn" onclick="closeModal('m-case')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="two-col">
+        <div class="form-field">
+          <label>Nomor Perkara <span class="req">*</span></label>
+          <input type="text" id="m-num" placeholder="123/K/Pid/2025"/>
+        </div>
+        <div class="form-field">
+          <label>Jenis Perkara</label>
+          <select id="m-type">
+            <option>Pidana</option><option>Perdata</option>
+            <option>Tata Usaha Negara</option><option>Agama</option><option>Militer</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Para Pihak</label>
+        <input type="text" id="m-parties" placeholder="Pemohon Kasasi vs Termohon Kasasi"/>
+      </div>
+      <div class="two-col">
+        <div class="form-field">
+          <label>Pengadilan Asal</label>
+          <input type="text" id="m-court" placeholder="PN Jakarta Pusat"/>
+        </div>
+        <div class="form-field">
+          <label>Tanggal Pendaftaran <span class="req">*</span></label>
+          <input type="date" id="m-date"/>
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Catatan Awal</label>
+        <textarea id="m-notes" placeholder="Ringkasan singkat atau catatan penting mengenai perkara ini…" rows="3"></textarea>
+      </div>
+      <div class="form-error" id="m-err"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal('m-case')">Batal</button>
+      <button class="btn-cta" onclick="saveCase()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Simpan Perkara
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: KONFIRMASI HAPUS -->
+<div class="modal-veil" id="m-del" onclick="closeModal('m-del',event)">
+  <div class="modal-box narrow">
+    <div class="modal-head">
+      <div class="modal-title">Hapus Perkara?</div>
+      <button class="icon-btn" onclick="closeModal('m-del')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="del-warning">Seluruh data tahapan perkara ini akan dihapus secara <strong>permanen</strong> dari database dan tidak dapat dikembalikan.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal('m-del')">Batal</button>
+      <button class="btn-danger" onclick="doDelete()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        Hapus Permanen
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════ FIREBASE ═══════════════ -->
+<script type="module">
+import { initializeApp }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  signOut, onAuthStateChanged, updateProfile,
+  GoogleAuthProvider, signInWithPopup
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore, collection, doc, addDoc, setDoc, getDoc,
+  updateDoc, deleteDoc, onSnapshot, query, where, orderBy,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ─── FIREBASE CONFIG — GANTI DENGAN CONFIG ANDA ─── */
+const firebaseConfig = {
+  apiKey: "AIzaSyAgwnENiYQGmXVHdqqRYbzaDFBy78PTkjo",
+    authDomain: "kasasitrack.firebaseapp.com",
+    projectId: "kasasitrack",
+    storageBucket: "kasasitrack.firebasestorage.app",
+    messagingSenderId: "710996764276",
+    appId: "1:710996764276:web:405eafa31521bd8e919321"
+};
+/* ─────────────────────────────────────────────────── */
+
+const fbApp = initializeApp(firebaseConfig);
+const auth  = getAuth(fbApp);
+const db    = getFirestore(fbApp);
+const gProv = new GoogleAuthProvider();
+
+/* ───────── CONSTANTS ───────── */
+const STEPS = [
+  { id:'pernyataan',           name:'Pengajuan Pernyataan Kasasi',       short:'Pernyataan',         deadline:14, from:null,
+    desc:'Permohonan kasasi diajukan kepada Panitera PN yang memutus perkara dalam 14 hari sejak putusan diucapkan/diberitahukan.',
+    docs:['Akta pernyataan kasasi','Salinan putusan pengadilan banding','Bukti lunas biaya perkara kasasi'] },
+  { id:'memori',               name:'Pengajuan Memori Kasasi',           short:'Memori Kasasi',      deadline:14, from:'pernyataan',
+    desc:'Memori kasasi berisi alasan-alasan permohonan kasasi secara lengkap. Harus diserahkan dalam 14 hari sejak pernyataan kasasi.',
+    docs:['Memori kasasi asli + salinan','Tanda terima pernyataan kasasi'] },
+  { id:'pbt_memori',           name:'Pemberitahuan Memori Kasasi',       short:'Pbt. Memori',        deadline:null, from:null,
+    desc:'Panitera memberitahukan isi memori kasasi kepada pihak lawan (termohon kasasi). Dilaksanakan oleh Pengadilan.',
+    docs:['Relaas pemberitahuan memori kasasi'] },
+  { id:'kontra_memori',        name:'Pengajuan Kontra Memori Kasasi',    short:'Kontra Memori',      deadline:14, from:'pbt_memori',
+    desc:'Pihak lawan dapat mengajukan kontra memori kasasi dalam 14 hari sejak pemberitahuan memori kasasi diterima.',
+    docs:['Kontra memori kasasi asli + salinan','Bukti penerimaan pemberitahuan memori kasasi'] },
+  { id:'pbt_kontra',           name:'Pemberitahuan Kontra Memori Kasasi',short:'Pbt. Kontra',        deadline:null, from:null,
+    desc:'Panitera memberitahukan kontra memori kasasi kepada pemohon kasasi. Dilaksanakan oleh Pengadilan.',
+    docs:['Relaas pemberitahuan kontra memori kasasi'] },
+  { id:'pbt_inzage',           name:'Pemberitahuan Inzage',              short:'Pbt. Inzage',        deadline:null, from:null,
+    desc:'Para pihak diberitahu hak mereka untuk mempelajari berkas perkara (inzage) sebelum berkas dikirim ke Mahkamah Agung.',
+    docs:['Relaas pemberitahuan inzage'] },
+  { id:'inzage',               name:'Pelaksanaan Inzage',                short:'Inzage',             deadline:14, from:'pbt_inzage',
+    desc:'Para pihak mempelajari & memeriksa berkas perkara. Hak ini dilaksanakan dalam 14 hari sejak pemberitahuan inzage.',
+    docs:['Berita acara inzage','Catatan hasil pemeriksaan berkas'] },
+  { id:'putusan',              name:'Putusan Kasasi',                    short:'Putusan MA',         deadline:null, from:null,
+    desc:'Mahkamah Agung menjatuhkan putusan kasasi: mengabulkan, menolak, atau tidak dapat diterima. Berkas kemudian dikembalikan ke PN asal.',
+    docs:['Salinan resmi putusan MA','Petikan putusan','Akta pemberitahuan putusan kepada para pihak'] },
+];
+
+const STATUS_LABEL = { pending:'Menunggu', active:'Berjalan', done:'Selesai', overdue:'Terlambat' };
+
+/* ───────── STATE ───────── */
+let me = null, cases = [], ci = 0, openStep = null, unsub = null;
+
+/* ───────── AUTH ───────── */
+window.doLogin = async () => {
+  const email = v('l-email'), pass = v('l-pass'), err = E('l-err');
+  err.textContent = '';
+  if(!email||!pass){ err.textContent='Email dan kata sandi wajib diisi.'; return; }
+  setBtnLoad('l-btn', true);
+  try { await signInWithEmailAndPassword(auth,email,pass); }
+  catch(e){ err.textContent = authMsg(e.code); }
+  finally { setBtnLoad('l-btn', false); }
+};
+
+window.doRegister = async () => {
+  const name=v('r-name'), email=v('r-email'), pass=v('r-pass'), err=E('r-err');
+  err.textContent='';
+  if(!name||!email||!pass){ err.textContent='Semua kolom wajib diisi.'; return; }
+  setBtnLoad('r-btn', true);
+  try {
+    const c = await createUserWithEmailAndPassword(auth,email,pass);
+    await updateProfile(c.user,{displayName:name});
+    await setDoc(doc(db,'users',c.user.uid),{name,email,createdAt:serverTimestamp()});
+  } catch(e){ err.textContent = authMsg(e.code); }
+  finally { setBtnLoad('r-btn', false); }
+};
+
+window.doGoogle = async () => {
+  E('l-err').textContent='';
+  try {
+    const r = await signInWithPopup(auth,gProv);
+    const ref = doc(db,'users',r.user.uid);
+    const snap = await getDoc(ref);
+    if(!snap.exists()) await setDoc(ref,{name:r.user.displayName,email:r.user.email,createdAt:serverTimestamp()});
+  } catch(e){ E('l-err').textContent = authMsg(e.code); }
+};
+
+window.doLogout = async () => {
+  if(unsub) unsub();
+  await signOut(auth);
+};
+
+window.showPanel = p => {
+  E('login-panel').style.display = p==='login' ? '' : 'none';
+  E('reg-panel').style.display   = p==='reg'   ? '' : 'none';
+};
+
+function authMsg(c){
+  return ({
+    'auth/invalid-email':'Format email tidak valid.',
+    'auth/user-not-found':'Akun tidak ditemukan.',
+    'auth/wrong-password':'Kata sandi salah.',
+    'auth/email-already-in-use':'Email sudah terdaftar.',
+    'auth/weak-password':'Kata sandi minimal 6 karakter.',
+    'auth/invalid-credential':'Email atau kata sandi salah.',
+    'auth/popup-closed-by-user':'Login Google dibatalkan.',
+    'auth/network-request-failed':'Periksa koneksi internet Anda.',
+  }[c]) || 'Terjadi kesalahan, coba lagi.';
+}
+
+/* ───────── AUTH STATE ───────── */
+onAuthStateChanged(auth, user => {
+  me = user;
+  if(user){
+    E('auth-screen').style.display='none';
+    E('app').style.display='block';
+    const init = (user.displayName||user.email||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+    E('u-avatar').textContent = init;
+    E('u-label').textContent  = user.displayName || user.email;
+    loadCases();
+  } else {
+    E('auth-screen').style.display='flex';
+    E('app').style.display='none';
+    cases=[]; ci=0;
+  }
+});
+
+/* ───────── FIRESTORE CASES ───────── */
+function loadCases(){
+  if(!me) return;
+  showLoad(true);
+  const q = query(collection(db,'cases'), where('uid','==',me.uid), orderBy('createdAt','asc'));
+  if(unsub) unsub();
+  unsub = onSnapshot(q, snap => {
+    cases = snap.docs.map(d=>({id:d.id,...d.data()}));
+    showLoad(false);
+    if(ci >= cases.length) ci = 0;
+    if(cases.length===0){
+      E('empty-state').style.display='flex';
+      E('main').style.display='none';
+    } else {
+      E('empty-state').style.display='none';
+      E('main').style.display='block';
+      render();
+    }
+  }, err => {
+    showLoad(false);
+    toast('Gagal memuat: '+err.message,'err');
+  });
+}
+
+/* ───────── CASE MODAL ───────── */
+window.openAddCase = () => {
+  E('m-date').value = today();
+  ['m-num','m-parties','m-court','m-notes'].forEach(id=>E(id).value='');
+  E('m-err').textContent='';
+  openModal('m-case');
+};
+
+window.saveCase = async () => {
+  const num=v('m-num'), type=v('m-type'), parties=v('m-parties'),
+        court=v('m-court'), date=v('m-date'), notes=v('m-notes');
+  const err=E('m-err');
+  if(!num||!date){ err.textContent='Nomor perkara dan tanggal wajib diisi.'; return; }
+  const steps={};
+  STEPS.forEach((s,i)=>{ steps[s.id]={ status: i===0?'active':'pending', date: i===0?date:'', notes:'' }; });
+  try {
+    await addDoc(collection(db,'cases'),{
+      uid:me.uid, num, type, parties, court, notes, registered:date,
+      steps, activity:[{text:'Perkara didaftarkan',time:new Date().toISOString()}],
+      createdAt:serverTimestamp()
+    });
+    closeModal('m-case');
+    ci = cases.length;
+    toast('Perkara berhasil ditambahkan.');
+  } catch(e){ err.textContent='Gagal menyimpan: '+e.message; }
+};
+
+/* ───────── DELETE ───────── */
+window.confirmDelete = () => openModal('m-del');
+window.doDelete = async () => {
+  if(!cases[ci]) return;
+  try {
+    await deleteDoc(doc(db,'cases',cases[ci].id));
+    closeModal('m-del'); ci=0;
+    toast('Perkara dihapus.','warn');
+  } catch(e){ toast('Gagal menghapus: '+e.message,'err'); }
+};
+
+/* ───────── SELECT ───────── */
+window.selectCase = idx => { ci=idx; openStep=null; render(); };
+
+/* ───────── STEP UPDATES ───────── */
+async function patchStep(field, val){
+  if(!cases[ci]) return;
+  const u={}; u[`steps.${field}`]=val;
+  try { await updateDoc(doc(db,'cases',cases[ci].id),u); }
+  catch(e){ toast('Gagal menyimpan.','err'); }
+}
+
+async function addLog(text){
+  if(!cases[ci]) return;
+  const act=(cases[ci].activity||[]).slice();
+  act.unshift({text,time:new Date().toISOString()});
+  await updateDoc(doc(db,'cases',cases[ci].id),{activity:act.slice(0,12)});
+}
+
+window.setStepDate   = (id,v)=>patchStep(`${id}.date`,v);
+window.setStepStatus = async(id,val)=>{
+  await patchStep(`${id}.status`,val);
+  const nm=STEPS.find(s=>s.id===id)?.name||id;
+  await addLog(`Status "${nm}" → ${STATUS_LABEL[val]||val}`);
+};
+window.setStepNotes  = (id,val)=>patchStep(`${id}.notes`,val);
+window.toggleStep    = id=>{ openStep=openStep===id?null:id; renderSteps(); };
+
+/* ───────── RENDER ───────── */
+function render(){
+  renderTabs(); renderTimeline(); renderHeader();
+  renderSteps(); renderPanel();
+}
+
+function renderTabs(){
+  E('ribbon-tabs').innerHTML = cases.map((c,i)=>`
+    <button class="rtab${i===ci?' active':''}" onclick="selectCase(${i})">
+      <span class="rtab-type">${c.type||'Kasasi'}</span>${c.num}
+    </button>`).join('');
+}
+
+function renderTimeline(){
+  const c=cases[ci]; if(!c) return;
+  E('timeline-scroll').innerHTML = STEPS.map((s,i)=>{
+    const st=c.steps?.[s.id]?.status||'pending';
+    const cls=st==='done'?'tl-done':st==='active'?'tl-active':'';
+    return `<div class="tl-step ${cls}">
+      <div class="tl-node">${st==='done'?`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`:(i+1)}</div>
+      <div class="tl-label">${s.short}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderHeader(){
+  const c=cases[ci]; if(!c) return;
+  E('c-num').textContent     = `${c.num}${c.court?' — '+c.court:''}`;
+  E('c-parties').textContent = c.parties||'Para pihak belum diisi';
+}
+
+function renderSteps(){
+  const c=cases[ci]; if(!c) return;
+  E('steps-list').innerHTML = STEPS.map((step,i)=>{
+    const st=c.steps?.[step.id]||{status:'pending',date:'',notes:''};
+    const isOpen=openStep===step.id;
+    const dl=deadline(step,c);
+    let metaRight='';
+    if(dl && st.status!=='done'){
+      metaRight = dl.diff<0
+        ? `<span class="meta-late">Terlambat ${Math.abs(dl.diff)} hari</span>`
+        : dl.diff===0 ? `<span class="meta-today">Hari ini</span>`
+        : dl.diff<=7  ? `<span class="meta-soon">Sisa ${dl.diff} hari</span>`
+        : `<span class="meta-ok">Sisa ${dl.diff} hari</span>`;
+    }
+    return `<div class="step-row ${isOpen?'open':''} st-${st.status}" onclick="toggleStep('${step.id}')">
+      <div class="step-row-head">
+        <div class="step-index-box status-${st.status}">${st.status==='done'?`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">${stepIcon(step.icon)}</svg>`}</div>
+        <div class="step-row-body">
+          <div class="step-row-title"><span class="step-seq">${i+1}.</span> ${step.name}</div>
+          <div class="step-row-meta">${st.date?`<span>${fmtDate(st.date)}</span>`:''}${metaRight}${st.notes?`<span class="meta-note">${st.notes.slice(0,45)}${st.notes.length>45?'…':''}</span>`:''}</div>
+        </div>
+        <div class="step-row-right">
+          <span class="tag tag-${st.status}">${STATUS_LABEL[st.status]||st.status}</span>
+          <svg class="row-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="step-row-detail">
+        <p class="step-desc">${step.desc}</p>
+        <div class="doc-section">
+          <div class="doc-label">Dokumen</div>
+          ${step.docs.map(d=>`<div class="doc-row"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>${d}</div>`).join('')}
+        </div>
+        <div class="two-col" style="margin-top:14px">
+          <div class="form-field"><label>Tanggal pelaksanaan</label>
+            <input type="date" value="${st.date||''}" onchange="setStepDate('${step.id}',this.value)" onclick="event.stopPropagation()"/></div>
+          <div class="form-field"><label>Status</label>
+            <select onchange="setStepStatus('${step.id}',this.value)" onclick="event.stopPropagation()">
+              ${['pending','active','done','overdue'].map(s=>`<option value="${s}"${st.status===s?' selected':''}>${STATUS_LABEL[s]}</option>`).join('')}
+            </select></div>
+        </div>
+        <div class="form-field" style="margin-top:10px"><label>Catatan</label>
+          <textarea rows="2" onclick="event.stopPropagation()" onblur="setStepNotes('${step.id}',this.value)">${st.notes||''}</textarea>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderPanel(){
+  const c=cases[ci]; if(!c) return;
+  const steps=c.steps||{};
+  let done=0,active=0,overdue=0;
+  STEPS.forEach(s=>{
+    const st=steps[s.id]?.status||'pending';
+    if(st==='done') done++;
+    else if(st==='active') active++;
+    else if(st==='overdue') overdue++;
+  });
+  const pct=Math.round(done/STEPS.length*100);
+  const offset=226-(226*pct/100);
+  E('ring-circle').style.strokeDashoffset=offset;
+  E('ring-pct').textContent=pct+'%';
+  E('ring-done').textContent=`${done}/${STEPS.length} tahap`;
+  E('progress-legend').innerHTML=`
+    <div class="leg-item"><span class="leg-dot done"></span><span>${done} Selesai</span></div>
+    <div class="leg-item"><span class="leg-dot active"></span><span>${active} Berjalan</span></div>
+    <div class="leg-item"><span class="leg-dot overdue"></span><span>${overdue} Terlambat</span></div>
+    <div class="leg-item"><span class="leg-dot pending"></span><span>${STEPS.length-done-active-overdue} Menunggu</span></div>`;
+
+  // Deadlines
+  const dls=[];
+  STEPS.forEach(step=>{
+    const st=steps[step.id]?.status||'pending';
+    if(st!=='done'&&step.deadline){
+      const dl=deadline(step,c);
+      if(dl) dls.push({name:step.short,diff:dl.diff,due:dl.due});
+    }
+  });
+  dls.sort((a,b)=>a.diff-b.diff);
+  E('deadlines-wrap').innerHTML = dls.slice(0,4).map(d=>{
+    const cls=d.diff<0?'urgent':d.diff<=7?'soon':'ok';
+    const txt=d.diff<0?`${Math.abs(d.diff)} hari terlambat`:d.diff===0?'Jatuh tempo hari ini':`${d.diff} hari lagi`;
+    return `<div class="dl-row">
+      <div class="dl-indicator ${cls}"></div>
+      <div class="dl-info"><div class="dl-name">${d.name}</div><div class="dl-date">${d.due.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})}</div></div>
+      <div class="dl-count ${cls}">${txt}</div>
+    </div>`;
+  }).join('')||'<div class="no-item">Tidak ada tenggat aktif</div>';
+
+  // Activity
+  const acts=c.activity||[];
+  E('activity-wrap').innerHTML=acts.slice(0,6).map(a=>`
+    <div class="act-row">
+      <div class="act-dot"></div>
+      <div><div class="act-text">${a.text}</div><div class="act-time">${fmtDatetime(a.time)}</div></div>
+    </div>`).join('')||'<div class="no-item">Belum ada aktivitas</div>';
+}
+
+/* ───────── HELPERS ───────── */
+function deadline(step,c){
+  if(!step.deadline) return null;
+  let from=null;
+  if(step.from){ const p=c.steps?.[step.from]; if(p?.date) from=new Date(p.date); }
+  else if(c.registered) from=new Date(c.registered);
+  if(!from) return null;
+  const due=new Date(from); due.setDate(due.getDate()+step.deadline);
+  return {due, diff:Math.round((due-new Date())/86400000)};
+}
+function fmtDate(s){ return s?new Date(s).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}):'-'; }
+function fmtDatetime(s){ return s?new Date(s).toLocaleString('id-ID',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'-'; }
+function today(){ return new Date().toISOString().split('T')[0]; }
+function v(id){ return E(id).value.trim(); }
+function E(id){ return document.getElementById(id); }
+function showLoad(b){ E('load-state').style.display=b?'flex':'none'; }
+function openModal(id){ E(id).classList.add('open'); }
+function closeModal(id,e){ if(e&&e.target!==E(id)) return; E(id).classList.remove('open'); }
+window.closeModal=closeModal;
+function setBtnLoad(id,on){
+  const b=E(id); if(!b) return;
+  b.disabled=on;
+  b.style.opacity=on?'0.6':'1';
+}
+function toast(msg,t='ok'){
+  const el=E('toast');
+  el.textContent=msg; el.className='toast show '+(t==='err'?'terr':t==='warn'?'twarn':'tok');
+  setTimeout(()=>el.className='toast',3200);
+}
+window.toast=toast;
+function stepIcon(name){
+  const icons={
+    'file-text':'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>',
+    'notes':'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/>',
+    'send':'<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>',
+    'file-symlink':'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M10 17H8v-4l6-1"/>',
+    'eye':'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',
+    'folder-open':'<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>',
+    'gavel':'<path d="M14 14l7 7"/><path d="M10 2l12 12-3.5 3.5L6.5 5.5z"/><path d="M2 22l5-5"/>',
+  };
+  return icons[name]||'<circle cx="12" cy="12" r="8"/>';
+}
+window.togglePass=(id,btn)=>{
+  const inp=E(id);
+  if(inp.type==='password'){ inp.type='text'; btn.style.opacity='1'; }
+  else { inp.type='password'; btn.style.opacity='0.5'; }
+};
+// Enter to login
+document.addEventListener('keydown',e=>{ if(e.key==='Enter'&&E('login-panel').style.display!=='none') doLogin(); });
+</script>
+</body>
+</html>
