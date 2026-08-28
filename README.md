@@ -10,9 +10,7 @@ Deskripsi singkat mengenai aplikasi, tujuan pembuatan, serta fitur-fitur utama y
 
 ├── style.css/           # Kode untuk styling
 
-├── index.html/          # Kode halaman aplikasi
-
-└── netlify/functions    # Kode function untuk aplikasi
+└── index.html/          # Kode halaman aplikasi
 
 ```
 
